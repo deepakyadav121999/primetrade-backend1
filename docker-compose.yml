@@ -1,0 +1,44 @@
+version: "3.9"
+
+services:
+  # ── MySQL 8 database ──────────────────────────────────────────
+  db:
+    image: mysql:8.0
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE:      ${DB_NAME}
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      # Auto-initialise schema on first boot
+      - ./scripts/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql
+    healthcheck:
+      test:     ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_PASSWORD}"]
+      interval: 10s
+      timeout:  5s
+      retries:  5
+
+  # ── Next.js application ───────────────────────────────────────
+  app:
+    build: .
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "3000:3000"
+    environment:
+      DB_HOST:       db
+      DB_PORT:       3306
+      DB_USER:       root
+      DB_PASSWORD:   ${DB_PASSWORD}
+      DB_NAME:       ${DB_NAME}
+      JWT_SECRET:    ${JWT_SECRET}
+      JWT_EXPIRES_IN: 7d
+      NODE_ENV:      production
+
+volumes:
+  mysql_data:
+    driver: local

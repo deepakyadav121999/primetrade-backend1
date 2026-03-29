@@ -1,0 +1,54 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    @apply bg-gray-950 text-gray-100 antialiased;
+  }
+  input, select, textarea {
+    @apply outline-none;
+  }
+}
+
+@layer components {
+  /* Reusable input style */
+  .input-base {
+    @apply w-full rounded-lg border border-gray-700 bg-gray-800 px-4 py-2.5
+           text-sm text-gray-100 placeholder-gray-500
+           focus:border-brand-500 focus:ring-1 focus:ring-brand-500
+           transition-colors duration-150;
+  }
+
+  /* Primary button */
+  .btn-primary {
+    @apply w-full rounded-lg bg-brand-500 px-4 py-2.5
+           text-sm font-semibold text-white
+           hover:bg-brand-600 active:scale-[0.98]
+           transition-all duration-150 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  /* Ghost / cancel button */
+  .btn-ghost {
+    @apply rounded-lg border border-gray-700 bg-transparent px-4 py-2
+           text-sm font-medium text-gray-400
+           hover:border-gray-500 hover:text-gray-200
+           transition-colors duration-150;
+  }
+
+  /* Card container */
+  .card {
+    @apply rounded-xl border border-gray-800 bg-gray-900;
+  }
+
+  /* Badge for status */
+  .badge {
+    @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium;
+  }
+}
